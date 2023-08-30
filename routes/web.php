@@ -13,15 +13,14 @@ use App\Http\Controllers\TaskController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
     Route::get('/home', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/getTasks', [App\Http\Controllers\TaskController::class, 'getTasks'])->name('tasks.getTasks');
     Route::post('/tasks', [App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');

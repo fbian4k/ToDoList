@@ -9,16 +9,18 @@ class TaskController extends Controller
     
     public function index()
     {
-        $completedTasks = Task::where('completed', 1)->get();
-        $pendingTasks = Task::where('completed', 0)->get();
-
+        $user = Auth::user();
+        $completedTasks = $user->tasks()->where('completed', 1)->get();
+        $pendingTasks = $user->tasks()->where('completed', 0)->get();
+    
         return view('tasks.index', compact('completedTasks', 'pendingTasks'));
     }
     public function getTasks()
     {
-        $completedTasks = Task::where('completed', 1)->get();
-        $pendingTasks = Task::where('completed', 0)->get();
-
+        $user = Auth::user();
+        $completedTasks = $user->tasks()->where('completed', 1)->get();
+        $pendingTasks = $user->tasks()->where('completed', 0)->get();
+    
         return response()->json([
             'completedTasks' => $completedTasks,
             'pendingTasks' => $pendingTasks,
