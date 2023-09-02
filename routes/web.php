@@ -20,8 +20,8 @@ Auth::routes();
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
-    Route::get('/home', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/', [App\Http\Controllers\TaskController::class, 'index1'])->name('tasks.index1');
+    Route::get('/home', [App\Http\Controllers\TaskController::class, 'index1'])->name('tasks.index1');
     Route::get('/tasks/getTasks', [App\Http\Controllers\TaskController::class, 'getTasks'])->name('tasks.getTasks');
     Route::post('/tasks', [App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');
     Route::get('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'show'])->name('tasks.show'); 
@@ -29,4 +29,5 @@ Route::middleware('auth')->group(function () {
     Route::put('/tasks/{task}/complete', [App\Http\Controllers\TaskController::class, 'complete'])->name('tasks.complete'); 
     Route::delete('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'destroy'])->name('tasks.destroy'); 
     Route::get('/tasks/{task}/edit', [App\Http\Controllers\TaskController::class, 'edit'])->name('tasks.edit');
+    Route::post('tasks/{id}/toggle-status', [App\Http\Controllers\TaskController::class, 'toggleStatus'])->name('tasks.toggleStatus');
 });
