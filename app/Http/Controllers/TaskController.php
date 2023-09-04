@@ -32,8 +32,10 @@ class TaskController extends Controller
                 })
                 ->addColumn('actions', function ($task) {
 
-                    return '<input type="checkbox" class="toggle-status-checkbox" data-task-id="' . $task->id . '" ' . ($task->completed ? 'checked' : '') . '>
-                            
+                    return '<input type="checkbox" class="toggle-status-checkbox custom-checkbox" data-task-id="' . $task->id . '" ' . ($task->completed ? 'checked' : '') . '>
+                            <button class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="editTask(' . $task->id . ')">
+                                <i class="fas fa-edit"></i>
+                            </button>
                             <button class="btn btn-danger btn-sm" onclick="deleteTask(' . $task->id . ')">
                                 <i class="fas fa-trash-alt"></i>
                             </button>';
@@ -72,7 +74,7 @@ class TaskController extends Controller
 
         $request->validate([
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required|string|max:600'
         ]);
 
         $task->update([
@@ -86,8 +88,15 @@ class TaskController extends Controller
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'required|string|max:600',
             'category_id' => 'required|integer', 
+        ], [
+            'title.required' => 'El título es obligatorio.',
+            'title.max' => 'El título no debe ser mayor de 255 caracteres.',
+            'description.required' => 'La descripción es obligatoria.',
+            'description.max' => 'La descripción no debe ser mayor de 600 caracteres.',
+            'category_id.required' => 'La categoría es obligatoria.',
+            'category_id.integer' => 'La categoría debe ser un número entero.'
         ]);
 
         
