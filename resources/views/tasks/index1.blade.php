@@ -29,48 +29,7 @@
     </tbody>
 </table>
 </div>
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Tarea Nueva</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="task-form">
-        @csrf 
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="title">Título:</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Descripción:</label>
-                    <textarea class="form-control" id="description" name="description" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="category">Categoría:</label>
-                    <select class="form-control" id="category" name="category_id" required>
-                        <option value="" disabled selected>Selecciona una categoría</option>
-                        @if($categories)
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Ok</button>
-            </div>
-        </form>
-    </div>
-  </div>
-</div>
-<!-- <div class="modal fade" id="edit-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
+<div class="modal fade" id="edit-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -88,6 +47,7 @@
                         <label for="edit-title">Título:</label>
                         <input type="text" class="form-control" id="edit-title" name="title" required>
                     </div>
+                    
                     <div class="form-group">
                         <label for="edit-description">Descripción:</label>
                         <textarea class="form-control" id="edit-description" name="description" required></textarea>
@@ -111,7 +71,58 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Tarea Nueva</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="task-form">
+        @csrf 
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="title">Título:</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                    @error('title')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción:</label>
+                    <textarea class="form-control" id="description" name="description" required></textarea>
+                    @error('description')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="category">Categoría:</label>
+                    <select class="form-control" id="category" name="category_id" required>
+                        <option value="" disabled selected>Selecciona una categoría</option>
+                        @if($categories)
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                        @endif
+                    </select>
+                    @error('category_id')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Ok</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
 
 <script>
     toastr.options = {
@@ -123,63 +134,64 @@
     "extendedTimeOut": 1000, 
     "toastClass": "toast", 
     };
-$(document).ready(function() {
 
-    $('#tasks-table').DataTable({
-        "serverSide": true,
-        "ajax": "{{ route('tasks.index1') }}",
-        "columns": [
-            { "data": "id" },
-            { "data": "title" },
-            { "data": "description" },
-            { "data": "category.name" },
-            { "data": "assigned_user.name" },
-            { "data": "completed" },
-            { "data": "actions", "orderable": false, "searchable": false }
-        ],
-        "ordering": true,
-        "searching": false,
-        "paging": true,
-        "language": {
-            "sLengthMenu": "Mostrar _MENU_ registros por página",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sSearch": "Buscar:",
-            "sLoadingRecords": "Cargando...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-        }
-    });
+    $(document).ready(function() {
 
-    $('#task-form').submit(function(e) {
-        e.preventDefault(); 
-
-        var formData = $(this).serialize();
-
-        $.ajax({
-            url: "{{ route('tasks.store') }}", 
-            type: 'POST',
-            data: formData,
-            success: function(data) {
-                
-                $('#staticBackdrop').modal('hide');
-                $('#tasks-table').DataTable().ajax.reload();
-
-                showSuccessMessage(data.message)
-            },
-            error: function(xhr) {
-                console.error(xhr);
-                showErrorMessage('Error al crear la tarea. Por favor, inténtalo de nuevo.');
+        $('#tasks-table').DataTable({
+            "serverSide": true,
+            "ajax": "{{ route('tasks.index1') }}",
+            "columns": [
+                { "data": "id" },
+                { "data": "title" },
+                { "data": "description" },
+                { "data": "category.name" },
+                { "data": "assigned_user.name" },
+                { "data": "completed" },
+                { "data": "actions", "orderable": false, "searchable": false }
+            ],
+            "ordering": true,
+            "searching": false,
+            "paging": true,
+            "language": {
+                "sLengthMenu": "Mostrar _MENU_ registros por página",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
             }
         });
-    });
+
+        $('#task-form').submit(function(e) {
+            e.preventDefault(); 
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: "{{ route('tasks.store') }}", 
+                type: 'POST',
+                data: formData,
+                success: function(data) {
+                    
+                    $('#staticBackdrop').modal('hide');
+                    $('#tasks-table').DataTable().ajax.reload();
+
+                    showSuccessMessage(data.message)
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    showErrorMessage('Error al crear la tarea. Por favor, inténtalo de nuevo.');
+                }
+            });
+        });
     });
     
     function toggleTaskStatus(taskId) {
@@ -199,6 +211,7 @@ $(document).ready(function() {
             }
         });
     }
+
     $(document).on('change', '.toggle-status-checkbox', function() {
         var taskId = $(this).data('task-id');
         var completed = this.checked;
@@ -224,10 +237,13 @@ $(document).ready(function() {
     });
 
     function editTask(taskId) {
-       
+        $('#edit-form').off('submit');
         $.ajax({
             url: "{{ route('tasks.show', ':taskId') }}".replace(':taskId', taskId),
             type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: function(data) {
                 console.log(data)
                 $('#edit-title').val(data.task.title);
@@ -244,6 +260,9 @@ $(document).ready(function() {
                     $.ajax({
                         url: "{{ route('tasks.update', ':taskId') }}".replace(':taskId', taskId),
                         type: 'PUT',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                         data: formData,
                         success: function(response) {
 
