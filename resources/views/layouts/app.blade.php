@@ -48,9 +48,8 @@
         margin-bottom: 30px; 
         }
         .custom-checkbox {
-            transform: scale(2.1);
-            margin-right: 20px; 
-            margin-top: 5px;
+            transform: scale(2.2);
+            margin-right: 20px;
         }
     </style>
 </head>

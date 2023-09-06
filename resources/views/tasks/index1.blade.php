@@ -3,14 +3,37 @@
 @section('content')
 <div class="container app-container">
     <div class="row justify-content-between align-items-center mb-3">
-        <div class="col-auto">
+        <div class="col-md-8">
             <h1><i class="fas fa-tasks"></i> Lista de Tareas</h1>
         </div>
-        <div class="col-auto">
+        <div class="col-md-4 text-md-right">
         <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#staticBackdrop"> Crear Nueva Tarea </button>
         </div>
     </div>
 
+    <form id="filter-form">
+    <div class="row">
+        <br>
+        <h4>Filtrar por:</h4>
+        <div class="col-md-4">
+            <label for="start_date">Fecha Creación:</label>
+            <input type="date" class="form-control" id="start_date" name="start_date">
+        </div>
+        <div class="col-md-4">
+            <label for="end_date">Fecha Completada:</label>
+            <input type="date" class="form-control" id="end_date" name="end_date">
+        </div>
+        <div class="col-md-4">
+            <label for="activity_type">Tipo de Actividad:</label>
+            <select class="form-control" id="activity_type" name="activity_type">
+                <option value="">Todos</option>
+                <option value="Completada">Completada</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>
+        </div>
+    </div>
+    <br><br>
+</form>
 
 <table id="tasks-table" class="display" style="width:100%">
     <thead>
@@ -21,6 +44,9 @@
             <th>Categoría</th>
             <th>Usuario Asignado</th>
             <th>Estado</th>
+            <th>Fecha de creación</th>
+            <th>Fecha de término</th>
+            <th>Tiempo transcurrido</th>
             <th>Acciones</th>
         </tr>
     </thead>

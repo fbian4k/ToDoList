@@ -58,13 +58,15 @@ class TaskController extends Controller
                 })
                 ->addColumn('actions', function ($task) {
 
-                    return '<input type="checkbox" class="toggle-status-checkbox custom-checkbox" data-task-id="' . $task->id . '" ' . ($task->completed ? 'checked' : '') . '>
+                    return '<div class="btn-group">
+                            <input type="checkbox" class="toggle-status-checkbox custom-checkbox" data-task-id="' . $task->id . '" ' . ($task->completed ? 'checked' : '') . '>
                             <button class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="editTask(' . $task->id . ')">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn btn-danger btn-sm" onclick="deleteTask(' . $task->id . ')">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>';
+                            </button>
+                            </div>';
 
                 })
                 
