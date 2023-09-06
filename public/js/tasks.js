@@ -20,7 +20,15 @@ $(document).ready(function() {
 
     $('#tasks-table').DataTable({
         "serverSide": true,
-        "ajax": "/tareas",
+        "ajax":
+        {
+            "url": "/tareas",
+            "data": function(d) {
+                d.start_date = $('#start_date').val();
+                d.end_date = $('#end_date').val();
+                d.activity_type = $('#activity_type').val();
+            }
+        },
         "columns": [
             { "data": "id" },
             { "data": "title" },
@@ -28,6 +36,9 @@ $(document).ready(function() {
             { "data": "category.name" },
             { "data": "assigned_user.name" },
             { "data": "completed" },
+            { "data": "created_at" }, 
+            { "data": "completed_at" }, 
+            { "data": "elapsed_time" },
             { "data": "actions", "orderable": false, "searchable": false }
         ],
         "ordering": true,
@@ -49,6 +60,15 @@ $(document).ready(function() {
                 "sPrevious": "Anterior"
             },
         }
+    });
+    $('#start_date, #end_date, #activity_type').on('change', function() {
+        
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
+        var activityType = $('#activity_type').val();
+    
+        
+        $('#tasks-table').DataTable().ajax.reload();
     });
 
     $('#task-form').submit(function(e) {

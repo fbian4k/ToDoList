@@ -23,9 +23,35 @@ class TaskController extends Controller
             $tasks = Task::with(['category', 'assignedUser'])
             ->orderBy('created_at', 'desc');
             // $request->input('search.value')
-
             
-
+            if ($request->filled('start_date')) {
+                $tasks->where('created_at', '>=', $request->input('start_date'));
+            }
+            if ($request->filled('end_date')) {
+                $tasks->where('completed_at', '<=', $request->input('end_date'));
+            }
+            if ($request->filled('activity_type')) {
+                $activityType = $request->input('activity_type');
+                if ($activityType === 'Completada') {
+                    $tasks->where('completed', 1);
+                } elseif ($activityType === 'Pendiente') {
+                    $tasks->where('completed', 0);
+                }
+            }
+            $tasks = $tasks->get();
+            $tasks->transform(function ($task) {
+                if ($task->created_at && $task->completed_at) {
+                    $elapsedSeconds = $task->created_at->diffInSeconds($task->completed_at);
+                    $task->elapsed_time = $this->formatElapsedTime($elapsedSeconds);
+                } else {
+                    $task->elapsed_time = 'N/A';
+                }
+            
+                $task->created_at = $task->created_at ? $task->created_at : 'N/A';
+                $task->completed_at = $task->completed_at ? $task->completed_at : 'N/A';
+                return $task;
+            });
+            
             return DataTables::of($tasks)
                 ->addColumn('completed', function ($task) {
                     return $task->completed ? 'Completada' : 'Pendiente';
@@ -41,7 +67,7 @@ class TaskController extends Controller
                             </button>';
 
                 })
-                // <button class="btn btn-primary btn-sm" onclick="editTask(' . $task->id . ')">Editar</button>
+                
                 ->rawColumns(['actions'])
                 ->make(true);
 
@@ -51,6 +77,26 @@ class TaskController extends Controller
     
         return view('tasks.index1', compact('categories'));
     }
+    private function formatElapsedTime($seconds)
+{
+    $hours = floor($seconds / 3600);
+    $minutes = floor(($seconds % 3600) / 60);
+    $seconds = $seconds % 60;
+
+    $formattedTime = '';
+    if ($hours > 0) {
+        $formattedTime .= $hours . ' horas ';
+    }
+    if ($minutes > 0) {
+        $formattedTime .= $minutes . ' minutos ';
+    }
+    if ($seconds > 0) {
+        $formattedTime .= $seconds . ' segundos';
+    }
+
+    return trim($formattedTime);
+}
+
     // public function getTasks()
     // {
     //     $user = Auth::user();
@@ -126,7 +172,13 @@ class TaskController extends Controller
     public function toggleStatus($id)
     {
         $task = Task::findOrFail($id);
-        $task->completed = !$task->completed;
+        if ($task->completed == 0) {
+            $task->completed = 1;
+            $task->completed_at = now();
+        } else {
+            $task->completed = 0;
+            $task->completed_at = null; 
+        }
         $task->save();
 
         return response()->json(['message' => 'Estado actualizado correctamente']);
