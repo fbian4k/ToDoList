@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     $('#tasks-table').DataTable({
         "serverSide": true,
-        "ajax": "/",
+        "ajax": "/tareas",
         "columns": [
             { "data": "id" },
             { "data": "title" },
@@ -75,30 +75,12 @@ $(document).ready(function() {
     });
 });
 
-function toggleTaskStatus(taskId) {
-    $.ajax({
-        url: "/tareas/"+taskId+"/toggle-estado",
-        type: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(data) {
-            showSuccessMessage(data.message)
-            $('#tasks-table').DataTable().ajax.reload();
-        },
-        error: function(xhr) {
-            console.error(xhr);
-            showErrorMessage('Error al crear la tarea. Por favor, inténtalo de nuevo.');
-        }
-    });
-}
-
 $(document).on('change', '.toggle-status-checkbox', function() {
     var taskId = $(this).data('task-id');
     var completed = this.checked;
 
     $.ajax({
-        url: "{{ route('tasks.toggleStatus', ':taskId') }}".replace(':taskId', taskId),
+        url: "/tareas/"+taskId+"/toggle-estado",
         type: 'POST',
         data: {
             completed: completed
